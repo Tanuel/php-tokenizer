@@ -1,0 +1,23 @@
+<phpunit bootstrap="vendor/autoload.php"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         verbose="false">
+  <testsuites>
+    <testsuite name="Unit Tests">
+      <directory>tests</directory>
+    </testsuite>
+  </testsuites>
+
+  <filter>
+    <whitelist processUncoveredFilesFromWhitelist="true">
+      <directory suffix=".php">./src</directory>
+    </whitelist>
+  </filter>
+  <php>
+    <ini name="error_reporting" value="-1"/>
+  </php>
+  <logging>
+    <log type="coverage-text" target="php://stdout"/>
+  </logging>
+</phpunit>

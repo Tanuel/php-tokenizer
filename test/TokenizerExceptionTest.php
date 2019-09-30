@@ -1,0 +1,10 @@
+<?php declare(strict_types=1);
+
+namespace Tanuel\Tokenizer\Test;
+
+use PHPUnit\Framework\TestCase;
+
+class TokenizerExceptionTest extends TestCase
+{
+
+}

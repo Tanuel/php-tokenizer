@@ -1,0 +1,17 @@
+# top-most EditorConfig file
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+tab_width = 4
+indent_style = space
+indent_size = tab
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.php]
+max_line_length = 120
+
+[*.{json,xml}]
+indent_size = 2
