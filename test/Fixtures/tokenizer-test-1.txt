@@ -1,0 +1,5 @@
+first
+test_1 then test_2
+anotherT_STRING
+'single-\'quoted\'-string'
+"double-\"quoted\"-string"

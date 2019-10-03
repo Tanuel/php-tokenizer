@@ -1,14 +1,19 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Tanuel\Tokenizer;
 
 abstract class AbstractTokenDefinition
 {
-
     /**
-     * @pattern "(?:[^"\\\\]|\\\\.)*"|\'(?:[^\'\\\\]|\\\\.)*\'
+     * @pattern "(?:[^"\\]|\\.)*"
      */
-    const T_QUOTED_STRING = 'T_QUOTED_STRING';
+    const T_DOUBLE_QUOTED_STRING = 'T_DOUBLE_QUOTED_STRING';
+    /**
+     * @pattern '(?:[^\'\\]|\\.)*'
+     */
+    const T_SINGLE_QUOTED_STRING = 'T_SINGLE_QUOTED_STRING';
     /**
      * @pattern \w+
      */
@@ -23,21 +28,22 @@ abstract class AbstractTokenDefinition
 
     public function __construct(string $name, string $pattern)
     {
-        $this->name    = $name;
+        $this->name = $name;
         $this->pattern = $pattern;
     }
 
     /**
-     * @return static[]
      * @throws \ReflectionException
+     *
+     * @return static[]
      */
-    public static function getDefinitions():array
+    public static function getDefinitions(): array
     {
-        $rf     = new \ReflectionClass(static::class);
+        $rf = new \ReflectionClass(static::class);
         $consts = $rf->getConstants();
-        $def    = [];
+        $def = [];
         foreach ($consts as $k => $v) {
-            if (strpos($k, 'T_') === 0) {
+            if (0 === strpos($k, 'T_')) {
                 $c = new \ReflectionClassConstant(static::class, $k);
                 if ($c->getDocComment()) {
                     preg_match('/@pattern (.*)/', $c->getDocComment(), $m);
@@ -54,7 +60,7 @@ abstract class AbstractTokenDefinition
     /**
      * @return string
      */
-    public function getName():string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -62,17 +68,18 @@ abstract class AbstractTokenDefinition
     /**
      * @return string
      */
-    public function getPattern():string
+    public function getPattern(): string
     {
         return $this->pattern;
     }
 
     /**
-     * Get the full regex pattern including slashes and ^
+     * Get the full regex pattern including slashes and ^.
+     *
      * @return string
      */
-    public function getRegex():string
+    public function getRegex(): string
     {
-        return '/^' . $this->pattern . '/';
+        return '/^'.$this->pattern.'/';
     }
 }
