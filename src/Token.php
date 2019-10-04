@@ -50,7 +50,14 @@ class Token
         return $this->definition;
     }
 
-    public function eq(string ...$tokenNames)
+    /**
+     * Check if this token's name matches one of the passed strings.
+     *
+     * @param string ...$tokenNames
+     *
+     * @return bool
+     */
+    public function eq(string ...$tokenNames): bool
     {
         foreach ($tokenNames as $n) {
             if ($n === $this->definition->getName()) {
@@ -62,6 +69,9 @@ class Token
     }
 
     /**
+     * Starting column of the value inside the string,
+     * from the starting line.
+     *
      * @return int
      */
     public function getColumn(): int
@@ -70,6 +80,9 @@ class Token
     }
 
     /**
+     * The column of the last character of the value inside the original string,
+     * relative to the ending line.
+     *
      * @return int
      */
     public function getEndColumn(): int
@@ -84,6 +97,8 @@ class Token
     }
 
     /**
+     * Starting line of the value inside the original string.
+     *
      * @return int
      */
     public function getLine(): int
@@ -92,6 +107,8 @@ class Token
     }
 
     /**
+     * Number of lines.
+     *
      * @return int
      */
     public function getLineCount(): int
@@ -100,6 +117,8 @@ class Token
     }
 
     /**
+     * Last line of the value inside the original string.
+     *
      * @return int
      */
     public function getEndLine(): int

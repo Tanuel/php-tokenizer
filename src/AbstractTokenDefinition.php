@@ -26,7 +26,12 @@ abstract class AbstractTokenDefinition
     private $name;
     private $pattern;
 
-    public function __construct(string $name, string $pattern)
+    /**
+     * AbstractTokenDefinition constructor.
+     * @param string $name    Name of the token, e.g. T_STRING
+     * @param string $pattern regex-pattern of the token (without border slashes)
+     */
+    protected function __construct(string $name, string $pattern)
     {
         $this->name = $name;
         $this->pattern = $pattern;

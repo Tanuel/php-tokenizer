@@ -35,10 +35,10 @@ class Tokenizer
     private $current;
 
     /**
-     * Tokenizer constructor.
+     * @param string $string               the string to tokenize
+     * @param string $tokenDefinitionClass the classname of the token definition. requires the static method 'getDefinitions()'
      *
-     * @param string $string
-     * @param string $tokenDefinitionClass
+     * @see \Tanuel\Tokenizer\AbstractTokenDefinition
      */
     public function __construct(string $string, string $tokenDefinitionClass)
     {
@@ -47,6 +47,8 @@ class Tokenizer
     }
 
     /**
+     * Get the last returned token (not accounting for forecasts).
+     *
      * @return null|Token
      */
     public function getCurrent(): ?Token
@@ -55,6 +57,8 @@ class Tokenizer
     }
 
     /**
+     * Get a list of all tokens.
+     *
      * @param bool $ignoreWhitespace
      *
      * @return Token[]
@@ -71,7 +75,7 @@ class Tokenizer
     }
 
     /**
-     * Reset the pointer.
+     * Reset the pointer to the original string.
      *
      * @return $this
      */
@@ -98,7 +102,7 @@ class Tokenizer
     }
 
     /**
-     * Get the next token, but don't move the pointer.
+     * Get a forecast of the next token, but don't move the pointer.
      *
      * @param bool $ignoreWhitespace
      *
@@ -136,10 +140,10 @@ class Tokenizer
     }
 
     /**
-     * Get the next token from one or more specified definitions.
+     * Set an array of allowed tokens and throw an exception if none of the tokens match.
      *
-     * @param array $allowed          Allowed tokens
-     * @param bool  $ignoreWhitespace
+     * @param string[] $allowed          a string array of allowed tokens
+     * @param bool     $ignoreWhitespace wether to account for whitespaces or not
      *
      * @throws \Tanuel\Tokenizer\TokenizerException
      *
@@ -154,10 +158,11 @@ class Tokenizer
     }
 
     /**
-     * Get a forecast of the next token. Set an array of allowed tokens or throw an exception otherwise.
+     * Get a forecast of the next token, but don't move the pointer.
+     * Set an array of allowed tokens and throw an exception if none of the tokens match.
      *
-     * @param array $allowed
-     * @param bool  $ignoreWhitespace
+     * @param string[] $allowed          a string array of allowed tokens
+     * @param bool     $ignoreWhitespace wether to account for whitespaces or not
      *
      * @throws \Tanuel\Tokenizer\TokenizerException
      *

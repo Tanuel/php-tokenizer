@@ -20,6 +20,8 @@ class TokenizerException extends \Exception
     }
 
     /**
+     * The Tokenizer instance that threw this exception.
+     *
      * @return null|Tokenizer
      */
     public function getContext(): ?Tokenizer
