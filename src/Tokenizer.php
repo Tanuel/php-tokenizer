@@ -92,12 +92,7 @@ class Tokenizer
     public function next(bool $ignoreWhitespace = true): ?Token
     {
         $t = $this->current = $this->forecast($ignoreWhitespace);
-        if ($ignoreWhitespace) {
-            $this->pointer = ltrim($this->pointer);
-        }
-        if (null !== $t) {
-            $this->pointer = preg_replace($t->getDefinition()->getRegex(), '', $this->pointer);
-        }
+        $this->movePointer($t, $ignoreWhitespace);
 
         return $t;
     }
@@ -114,7 +109,26 @@ class Tokenizer
         $subject = $ignoreWhitespace ? ltrim($this->pointer) : $this->pointer;
         foreach ($this->tdef as $t) {
             if (preg_match($t->getRegex(), $subject, $m)) {
-                return new Token($t, $m[0]);
+                //calculate lines
+                $line = 1;
+                $column = 1;
+                if (!empty($this->current)) {
+                    $line = $this->current->getEndLine();
+                    $column = $this->current->getEndColumn() + 1;
+                }
+                if ('T_WHITESPACE' !== $t->getName()) {
+                    if (preg_match($this->tdef['T_WHITESPACE']->getRegex(), $this->pointer, $w)) {
+                        $whitespaceLines = explode("\n", $w[0]);
+                        $line += count($whitespaceLines) - 1;
+                        if (1 !== count($whitespaceLines)) {
+                            $column = 1 + strlen(end($whitespaceLines));
+                        } else {
+                            $column += strlen(end($whitespaceLines));
+                        }
+                    }
+                }
+
+                return new Token($t, $m[0], $line, $column);
             }
         }
 
@@ -134,12 +148,7 @@ class Tokenizer
     public function nextOf(array $allowed, bool $ignoreWhitespace = true): ?Token
     {
         $t = $this->current = $this->forecastOf($allowed, $ignoreWhitespace);
-        if ($ignoreWhitespace) {
-            $this->pointer = ltrim($this->pointer);
-        }
-        if (null !== $t) {
-            $this->pointer = preg_replace($t->getDefinition()->getRegex(), '', $this->pointer);
-        }
+        $this->movePointer($t, $ignoreWhitespace);
 
         return $t;
     }
@@ -164,7 +173,19 @@ class Tokenizer
             return $t;
         }
 
-        throw new TokenizerException('Unallowed Token '.$t->getDefinition()->getName()
-            .'. Expected '.implode('|', $allowed), $this);
+        throw new TokenizerException('Unallowed Token '.$t->getDefinition()->getName().'. Expected '.implode(
+            '|',
+            $allowed
+        ), $this);
+    }
+
+    private function movePointer(?Token $t, bool $ignoreWhitespace)
+    {
+        if ($ignoreWhitespace) {
+            $this->pointer = ltrim($this->pointer);
+        }
+        if (null !== $t) {
+            $this->pointer = preg_replace($t->getDefinition()->getRegex(), '', $this->pointer);
+        }
     }
 }

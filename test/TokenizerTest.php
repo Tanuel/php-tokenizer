@@ -35,46 +35,71 @@ class TokenizerTest extends TestCase
         $this->assertTrue($t->eq(TestTokenDefinition::T_STRING));
         $this->assertEquals($defs['T_STRING'], $t->getDefinition());
         $this->assertEquals($t, $tokenizer->getCurrent());
+        $this->assertEquals(1, $t->getLine());
+        $this->assertEquals(1, $t->getColumn());
 
         $t = $tokenizer->next(false);
         $this->assertEquals("\n", $t->getValue());
         $this->assertTrue($t->eq(TestTokenDefinition::T_WHITESPACE));
         $this->assertEquals($defs['T_WHITESPACE'], $t->getDefinition());
+        $this->assertEquals(1, $t->getLine());
+        $this->assertEquals(6, $t->getColumn());
 
         $t = $tokenizer->next(false);
         $this->assertEquals('test_1', $t->getValue());
         $this->assertTrue($t->eq(TestTokenDefinition::T_TEST_1));
         $this->assertEquals($defs['T_TEST_1'], $t->getDefinition());
+        $this->assertEquals(2, $t->getLine());
+        $this->assertEquals(1, $t->getColumn());
 
         $t = $tokenizer->next(false);
         $this->assertEquals(' ', $t->getValue());
         $this->assertTrue($t->eq(TestTokenDefinition::T_WHITESPACE));
         $this->assertEquals($defs['T_WHITESPACE'], $t->getDefinition());
+        $this->assertEquals(2, $t->getLine());
+        $this->assertEquals(7, $t->getColumn());
 
         $t = $tokenizer->next();
         $this->assertEquals('then', $t->getValue());
         $this->assertTrue($t->eq(TestTokenDefinition::T_STRING));
         $this->assertEquals($defs['T_STRING'], $t->getDefinition());
+        $this->assertEquals(2, $t->getLine());
+        $this->assertEquals(8, $t->getColumn());
 
         $t = $tokenizer->next(true);
         $this->assertEquals('test_2', $t->getValue());
         $this->assertTrue($t->eq(TestTokenDefinition::T_TEST_2));
         $this->assertEquals($defs['T_TEST_2'], $t->getDefinition());
+        $this->assertEquals(2, $t->getLine());
+        $this->assertEquals(13, $t->getColumn());
 
         $t = $tokenizer->next();
         $this->assertEquals('anotherT_STRING', $t->getValue());
         $this->assertTrue($t->eq(TestTokenDefinition::T_STRING));
         $this->assertEquals($defs['T_STRING'], $t->getDefinition());
+        $this->assertEquals(3, $t->getLine());
+        $this->assertEquals(1, $t->getColumn());
 
         $t = $tokenizer->next();
         $this->assertEquals("'single-\\'quoted\\'-string'", $t->getValue());
         $this->assertTrue($t->eq(TestTokenDefinition::T_SINGLE_QUOTED_STRING));
         $this->assertEquals($defs['T_SINGLE_QUOTED_STRING'], $t->getDefinition());
+        $this->assertEquals(4, $t->getLine());
+        $this->assertEquals(1, $t->getColumn());
 
         $t = $tokenizer->next();
         $this->assertEquals('"double-\"quoted\"-string"', $t->getValue());
         $this->assertTrue($t->eq(TestTokenDefinition::T_DOUBLE_QUOTED_STRING));
         $this->assertEquals($defs['T_DOUBLE_QUOTED_STRING'], $t->getDefinition());
+        $this->assertEquals(5, $t->getLine());
+        $this->assertEquals(2, $t->getColumn());
+
+        $t = $tokenizer->next();
+        $this->assertEquals('some_indented_T_STRING', $t->getValue());
+        $this->assertTrue($t->eq(TestTokenDefinition::T_STRING));
+        $this->assertEquals($defs['T_STRING'], $t->getDefinition());
+        $this->assertEquals(7, $t->getLine());
+        $this->assertEquals(5, $t->getColumn());
     }
 
     public function testTokenizerComplexWithExceptions()

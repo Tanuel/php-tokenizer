@@ -2,4 +2,6 @@ first
 test_1 then test_2
 anotherT_STRING
 'single-\'quoted\'-string'
-"double-\"quoted\"-string"
+ "double-\"quoted\"-string"
+
+    some_indented_T_STRING
