@@ -14,7 +14,7 @@ This is a simple but powerful tokenizer written in php where you can pass your o
 ### 1. Create a token definition with regex patterns
 
 ```php
-<?
+<?php
 // Token Definitions must start with T_, otherwise they won't be interpreted as Tokens
 
 use \Tanuel\Tokenizer\AbstractTokenDefinition;
