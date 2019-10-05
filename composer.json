@@ -3,6 +3,15 @@
   "type": "library",
   "description": "A tokenizer for PHP",
   "license": "GPL-3.0",
+  "homepage": "https://github.com/Tanuel/php-tokenizer",
+  "keywords": ["tokenizer"],
+  "authors": [
+    {
+      "name": "Tanuel",
+      "email": "tanuel.mategi@gmail.com",
+      "role": "project lead"
+    }
+  ],
   "require": {
     "php": ">=7.1"
   },
