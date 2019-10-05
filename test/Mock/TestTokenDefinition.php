@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Tanuel\Tokenizer\Test\Mock;
 
 use Tanuel\Tokenizer\AbstractTokenDefinition;
+use Tanuel\Tokenizer\BaseTokenInterface;
 
-class TestTokenDefinition extends AbstractTokenDefinition
+class TestTokenDefinition extends AbstractTokenDefinition implements BaseTokenInterface
 {
     /**
      * @pattern test_1

@@ -7,18 +7,6 @@ namespace Tanuel\Tokenizer;
 abstract class AbstractTokenDefinition
 {
     /**
-     * @pattern "(?:[^"\\]|\\.)*"
-     */
-    const T_DOUBLE_QUOTED_STRING = 'T_DOUBLE_QUOTED_STRING';
-    /**
-     * @pattern '(?:[^\'\\]|\\.)*'
-     */
-    const T_SINGLE_QUOTED_STRING = 'T_SINGLE_QUOTED_STRING';
-    /**
-     * @pattern \w+
-     */
-    const T_STRING = 'T_STRING';
-    /**
      * @pattern \s+
      */
     const T_WHITESPACE = 'T_WHITESPACE';
@@ -28,6 +16,7 @@ abstract class AbstractTokenDefinition
 
     /**
      * AbstractTokenDefinition constructor.
+     *
      * @param string $name    Name of the token, e.g. T_STRING
      * @param string $pattern regex-pattern of the token (without border slashes)
      */
