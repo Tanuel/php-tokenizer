@@ -2,7 +2,7 @@
   "name": "tanuel/tokenizer",
   "type": "library",
   "description": "A tokenizer for PHP",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "require": {
     "php": ">=7.1"
   },
