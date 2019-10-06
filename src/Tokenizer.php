@@ -33,6 +33,10 @@ class Tokenizer
      * @var null|Token
      */
     private $current;
+    /**
+     * @var string
+     */
+    private $regex;
 
     /**
      * @param string $string               the string to tokenize
@@ -44,6 +48,10 @@ class Tokenizer
     {
         $this->string = $this->pointer = trim($string);
         $this->tdef = call_user_func('\\'.$tokenDefinitionClass.'::getDefinitions');
+        $regexps = array_map(function (AbstractTokenDefinition $item) {
+            return '(*MARK:'.$item->getName().')'.$item->getPattern();
+        }, $this->tdef);
+        $this->regex = '/('.implode('|', $regexps).')/A';
     }
 
     /**
@@ -111,29 +119,33 @@ class Tokenizer
     public function forecast(bool $ignoreWhitespace = true): ?Token
     {
         $subject = $ignoreWhitespace ? ltrim($this->pointer) : $this->pointer;
-        foreach ($this->tdef as $t) {
-            if (preg_match($t->getRegex(), $subject, $m)) {
-                //calculate lines
-                $line = 1;
-                $column = 1;
-                if (!empty($this->current)) {
-                    $line = $this->current->getEndLine();
-                    $column = $this->current->getEndColumn() + 1;
-                }
-                if ('T_WHITESPACE' !== $t->getName()) {
-                    if (preg_match($this->tdef['T_WHITESPACE']->getRegex(), $this->pointer, $w)) {
-                        $whitespaceLines = explode("\n", $w[0]);
-                        $line += count($whitespaceLines) - 1;
-                        if (1 !== count($whitespaceLines)) {
-                            $column = 1 + strlen(end($whitespaceLines));
-                        } else {
-                            $column += strlen(end($whitespaceLines));
-                        }
+
+        if (preg_match($this->regex, $subject, $match)) {
+            [
+                0 => $value,
+                'MARK' => $mark
+            ] = $match;
+            //calculate lines
+            $line = 1;
+            $column = 1;
+            if (!empty($this->current)) {
+                $line = $this->current->getEndLine();
+                $column = $this->current->getEndColumn() + 1;
+            }
+            if ('T_WHITESPACE' !== $mark) {
+                $whitespace = strstr($this->pointer, $value, true);
+                if (!empty($whitespace)) {
+                    $whitespaceLines = explode("\n", $whitespace);
+                    $line += count($whitespaceLines) - 1;
+                    if (1 !== count($whitespaceLines)) {
+                        $column = 1 + strlen(end($whitespaceLines));
+                    } else {
+                        $column += strlen(end($whitespaceLines));
                     }
                 }
-
-                return new Token($t, $m[0], $line, $column);
             }
+
+            return new Token($this->tdef[$mark], $value, $line, $column);
         }
 
         return null;
