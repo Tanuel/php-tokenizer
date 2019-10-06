@@ -1,6 +1,11 @@
 # tanuel/tokenizer
 ### Lightweight Zero-Dependency Tokenizer for PHP
 
+![PHP from Packagist](https://img.shields.io/packagist/php-v/tanuel/tokenizer)
+![Packagist Version](https://img.shields.io/packagist/v/tanuel/tokenizer)
+![Packagist](https://img.shields.io/packagist/dt/tanuel/tokenizer)
+![Packagist](https://img.shields.io/packagist/l/tanuel/tokenizer)
+
 This is a simple but powerful tokenizer written in php where you can pass your own token definitions.
 
 ## Setup
