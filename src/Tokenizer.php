@@ -114,11 +114,17 @@ class Tokenizer
      *
      * @param bool $ignoreWhitespace
      *
+     * @throws \Tanuel\Tokenizer\TokenizerException
+     *
      * @return null|Token
      */
     public function forecast(bool $ignoreWhitespace = true): ?Token
     {
         $subject = $ignoreWhitespace ? ltrim($this->pointer) : $this->pointer;
+
+        if (empty($subject)) {
+            return null;
+        }
 
         if (preg_match($this->regex, $subject, $match)) {
             [
@@ -148,7 +154,7 @@ class Tokenizer
             return new Token($this->tdef[$mark], $value, $line, $column);
         }
 
-        return null;
+        throw new TokenizerException('No matching token definition found, but there is still content left');
     }
 
     /**

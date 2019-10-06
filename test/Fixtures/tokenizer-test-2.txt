@@ -1,0 +1,3 @@
+:::
+this file should throw an exception in the test,
+as there is no pattern configured for ':::'

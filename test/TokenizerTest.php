@@ -16,11 +16,12 @@ use Tanuel\Tokenizer\TokenizerException;
  */
 class TokenizerTest extends TestCase
 {
-    private const TEST_FILE = __DIR__.'/Fixtures/tokenizer-test-1.txt';
+    private const TEST_FILE_1 = __DIR__.'/Fixtures/tokenizer-test-1.txt';
+    private const TEST_FILE_2 = __DIR__.'/Fixtures/tokenizer-test-2.txt';
 
     public function testTokenizerSimple()
     {
-        $sample = file_get_contents(self::TEST_FILE);
+        $sample = file_get_contents(self::TEST_FILE_1);
         $tokenizer = new Tokenizer($sample, TestTokenDefinition::class);
         $defs = TestTokenDefinition::getDefinitions();
         $tokens = $tokenizer->getAll(false);
@@ -104,7 +105,7 @@ class TokenizerTest extends TestCase
 
     public function testTokenizerComplexWithExceptions()
     {
-        $sample = file_get_contents(self::TEST_FILE);
+        $sample = file_get_contents(self::TEST_FILE_1);
         $tokenizer = new Tokenizer($sample, TestTokenDefinition::class);
 
         $t = $tokenizer->nextOf([TestTokenDefinition::T_STRING]);
@@ -125,5 +126,13 @@ class TokenizerTest extends TestCase
         $this->assertEmpty($tokenizer->forecastOf([TestTokenDefinition::T_STRING], false));
         $this->assertEmpty($tokenizer->next(false));
         $this->assertEmpty($tokenizer->nextOf([TestTokenDefinition::T_STRING], false));
+    }
+
+    public function testNoMatchException()
+    {
+        $sample = file_get_contents(self::TEST_FILE_2);
+        $tokenizer = new Tokenizer($sample, TestTokenDefinition::class);
+        $this->expectException(TokenizerException::class);
+        $tokenizer->forecast();
     }
 }
