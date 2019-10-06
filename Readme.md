@@ -2,9 +2,9 @@
 ### Lightweight Zero-Dependency Tokenizer for PHP
 
 ![PHP from Packagist](https://img.shields.io/packagist/php-v/tanuel/tokenizer)
-![Packagist Version](https://img.shields.io/packagist/v/tanuel/tokenizer)
-![Packagist](https://img.shields.io/packagist/dt/tanuel/tokenizer)
-![Packagist](https://img.shields.io/packagist/l/tanuel/tokenizer)
+[![Packagist Version](https://img.shields.io/packagist/v/tanuel/tokenizer)](https://packagist.org/packages/tanuel/tokenizer)
+[![Packagist](https://img.shields.io/packagist/dt/tanuel/tokenizer)](https://packagist.org/packages/tanuel/tokenizer)
+[![License: GPL-3.0](https://img.shields.io/packagist/l/tanuel/tokenizer)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
 This is a simple but powerful tokenizer written in php where you can pass your own token definitions.
 
