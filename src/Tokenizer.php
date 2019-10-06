@@ -202,7 +202,7 @@ class Tokenizer
             $this->pointer = ltrim($this->pointer);
         }
         if (null !== $t) {
-            $this->pointer = preg_replace($t->getDefinition()->getRegex(), '', $this->pointer);
+            $this->pointer = substr($this->pointer, strlen($t->getValue()));
         }
     }
 }
