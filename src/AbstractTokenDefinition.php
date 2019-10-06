@@ -66,14 +66,4 @@ abstract class AbstractTokenDefinition
     {
         return $this->pattern;
     }
-
-    /**
-     * Get the full regex pattern including slashes and ^.
-     *
-     * @return string
-     */
-    public function getRegex(): string
-    {
-        return '/^'.$this->pattern.'/';
-    }
 }

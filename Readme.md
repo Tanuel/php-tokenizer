@@ -81,10 +81,8 @@ $token->getValue();
 $token->eq('T_STRING', 'T_DOLLAR'); // true if it is a T_STRING or T_DOLLAR
 
 // get the token definition info
-$token->getDefinition()->getName();         // e.g. T_STRING
-$token->getDefinition()->getPattern();      // e.g. \w+ for T_STRING
-// the exact regex used to match the token
-$token->getDefinition()->getRegex();       // e.g. /^\w+/ for T_STRING
+$token->getDefinition()->getName();    // e.g. T_STRING
+$token->getDefinition()->getPattern(); // e.g. \w+ for T_STRING
 
 // get metainfo
 $token->getLine();
