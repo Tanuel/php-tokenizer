@@ -7,7 +7,7 @@ namespace Tanuel\Tokenizer;
 class Token
 {
     /**
-     * @var AbstractTokenDefinition
+     * @var TokenStateDefinition
      */
     private $definition;
 
@@ -26,7 +26,7 @@ class Token
      */
     private $column;
 
-    public function __construct(AbstractTokenDefinition $definition, string $value, int $line, int $column)
+    public function __construct(TokenStateDefinition $definition, string $value, int $line, int $column)
     {
         $this->definition = $definition;
         $this->value = $value;
@@ -45,7 +45,7 @@ class Token
     /**
      * @return AbstractTokenDefinition
      */
-    public function getDefinition(): AbstractTokenDefinition
+    public function getDefinition(): TokenStateDefinition
     {
         return $this->definition;
     }

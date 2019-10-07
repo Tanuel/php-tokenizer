@@ -9,11 +9,11 @@ use Throwable;
 class TokenizerException extends \Exception
 {
     /**
-     * @var null|Tokenizer
+     * @var null|Stream
      */
     private $context;
 
-    public function __construct($message = '', Tokenizer $context = null, $code = 0, Throwable $previous = null)
+    public function __construct($message = '', Stream $context = null, $code = 0, Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
         $this->context = $context;
@@ -24,7 +24,7 @@ class TokenizerException extends \Exception
      *
      * @return null|Tokenizer
      */
-    public function getContext(): ?Tokenizer
+    public function getContext(): ?Stream
     {
         return $this->context;
     }
