@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tanuel\Tokenizer\Test\Mock;
 
-use Tanuel\Tokenizer\AbstractTokenDefinition;
 use Tanuel\Tokenizer\BaseTokenInterface;
+use Tanuel\Tokenizer\TokenStateDefinition;
 
-class TestTokenDefinition extends AbstractTokenDefinition implements BaseTokenInterface
+class TestTokenStateDefinition extends TokenStateDefinition implements BaseTokenInterface
 {
     /**
      * @pattern test_1
@@ -25,4 +25,16 @@ class TestTokenDefinition extends AbstractTokenDefinition implements BaseTokenIn
     const T_NO_PATTERN = 'T_NO_PATTERN';
 
     const T_NO_DOC_COMMENT = '';
+
+    /**
+     * @enterState \Tanuel\Tokenizer\Test\Mock\TestTokenSubStateDefinition
+     * @pattern ::enterState
+     */
+    const T_ENTER = 'T_ENTER';
+
+    /**
+     * @exitState
+     * @pattern ::exit(Unused)
+     */
+    const T_EXIT = 'T_ENTER';
 }

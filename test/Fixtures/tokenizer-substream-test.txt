@@ -1,0 +1,5 @@
+starting_with_T_STRING
+Now_entering_substate
+::enterState
+%%%placeholder%%%
+::exitState
