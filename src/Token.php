@@ -43,7 +43,7 @@ class Token
     }
 
     /**
-     * @return AbstractTokenDefinition
+     * @return \Tanuel\Tokenizer\TokenStateDefinition
      */
     public function getDefinition(): TokenStateDefinition
     {

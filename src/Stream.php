@@ -62,13 +62,19 @@ class Stream implements \Iterator
      * returns an array from this iterator
      * wrapper method because it looks cooler.
      *
-     * @see \iterator_to_array()
-     *
-     * @return array
+     * @param bool $ignoreWhitespace
+     * @return Token[]
+     * @throws \Tanuel\Tokenizer\TokenizerException
      */
-    public function toArray(): array
+    public function toArray(bool $ignoreWhitespace = false): array
     {
-        return iterator_to_array($this);
+        $this->rewind();
+        $tokens = [];
+        while ($token = $this->next($ignoreWhitespace)) {
+            $tokens[] = $token;
+        }
+
+        return $tokens;
     }
 
     /**
