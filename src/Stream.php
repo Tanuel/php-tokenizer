@@ -4,11 +4,14 @@ namespace Tanuel\Tokenizer;
 
 class Stream implements \Iterator
 {
+    /**
+     * @var string
+     */
     private $source;
     /**
-     * @var \Tanuel\Tokenizer\TokenStateDefinition
+     * @var \Tanuel\Tokenizer\TokenStateDefinition[]
      */
-    private $def;
+    private $definitions;
     /**
      * @var string
      */
@@ -24,11 +27,35 @@ class Stream implements \Iterator
      */
     private $current;
 
-    public function __construct(string $source, string $regex, array $def)
+    /**
+     * @var null|Stream
+     */
+    private $substream;
+    /**
+     * Parent stream if this is a substate.
+     *
+     * @var null|\Tanuel\Tokenizer\Stream
+     */
+    private $parent;
+    /**
+     * Tell if this stream should exit if the substream exits.
+     *
+     * @var bool
+     */
+    private $cascadeExit;
+
+    public function __construct(string $source, string $tokenDefinitionClass, Stream $parent = null, bool $cascadeExit = false)
     {
+        $this->definitions = call_user_func($tokenDefinitionClass.'::getDefinitions');
+
+        $regexps = array_map(function (TokenStateDefinition $item) {
+            return '(*MARK:'.$item->getName().')'.$item->getPattern();
+        }, $this->definitions);
+        $this->regex = '/('.implode('|', $regexps).')/A';
+
         $this->pointer = $this->source = $source;
-        $this->def = $def;
-        $this->regex = $regex;
+        $this->parent = $parent;
+        $this->cascadeExit = $cascadeExit;
     }
 
     /**
@@ -55,8 +82,20 @@ class Stream implements \Iterator
      */
     public function next(bool $ignoreWhitespace = true): ?Token
     {
+        if (!empty($this->substream)) {
+            return $this->substream->next($ignoreWhitespace);
+        }
         $t = $this->current = $this->forecast($ignoreWhitespace);
         $this->movePointer($t, $ignoreWhitespace);
+        if (null !== $t) {
+            if ($enter = $t->getDefinition()->getEnterState()) {
+                $this->startSubstream($enter, $t->getDefinition()->isExit());
+            } elseif ($t->getDefinition()->isExit()) {
+                if (!empty($this->parent)) {
+                    $this->parent->exitSubstream($this->pointer);
+                }
+            }
+        }
 
         return $t;
     }
@@ -72,6 +111,10 @@ class Stream implements \Iterator
      */
     public function forecast(bool $ignoreWhitespace = true): ?Token
     {
+        if (!empty($this->substream)) {
+            return $this->substream->forecast($ignoreWhitespace);
+        }
+
         $subject = $ignoreWhitespace ? ltrim($this->pointer) : $this->pointer;
 
         if (empty($subject)) {
@@ -103,7 +146,7 @@ class Stream implements \Iterator
                 }
             }
 
-            return new Token($this->def[$mark], $value, $line, $column);
+            return new Token($this->definitions[$mark], $value, $line, $column);
         }
 
         throw new TokenizerException('No matching token definition found, but there is still content left', $this);
@@ -127,8 +170,43 @@ class Stream implements \Iterator
     public function rewind()
     {
         $this->pointer = $this->source;
+        $this->substream = null;
     }
 
+    /**
+     * Delegate calls of next() and forecast() down to a substream.
+     * A substream can have another substream.
+     *
+     * @param string $state
+     * @param bool   $cascadeExit
+     */
+    private function startSubstream(string $state, bool $cascadeExit): void
+    {
+        $this->substream = new self($this->pointer, $state, $this, $cascadeExit);
+    }
+
+    /**
+     * Stop delegating down to the substream.
+     *
+     * @param string $newPointer
+     */
+    private function exitSubstream(string $newPointer)
+    {
+        $this->substream = null;
+        $this->pointer = $newPointer;
+        if ($this->cascadeExit) {
+            if (null !== $this->parent) {
+                $this->parent->exitSubstream($newPointer);
+            }
+        }
+    }
+
+    /**
+     * Move the pointer forward according to the provided token.
+     *
+     * @param null|\Tanuel\Tokenizer\Token $t
+     * @param bool                         $ignoreWhitespace
+     */
     private function movePointer(?Token $t, bool $ignoreWhitespace)
     {
         if ($ignoreWhitespace) {

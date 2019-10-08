@@ -7,16 +7,9 @@ namespace Tanuel\Tokenizer;
 class Tokenizer
 {
     /**
-     * Token Definitions.
-     *
-     * @var \Tanuel\Tokenizer\TokenStateDefinition[]
-     */
-    private $definitions;
-
-    /**
      * @var string
      */
-    private $regex;
+    private $tokenDefinitionClass;
 
     /**
      * @param string $tokenDefinitionClass
@@ -25,15 +18,11 @@ class Tokenizer
      */
     public function __construct(string $tokenDefinitionClass)
     {
-        $this->definitions = call_user_func('\\'.$tokenDefinitionClass.'::getDefinitions');
-        $regexps = array_map(function (TokenStateDefinition $item) {
-            return '(*MARK:'.$item->getName().')'.$item->getPattern();
-        }, $this->definitions);
-        $this->regex = '/('.implode('|', $regexps).')/A';
+        $this->tokenDefinitionClass = $tokenDefinitionClass;
     }
 
     public function tokenize(string $source)
     {
-        return new Stream($source, $this->regex, $this->definitions);
+        return new Stream($source, $this->tokenDefinitionClass);
     }
 }

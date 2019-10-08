@@ -7,7 +7,7 @@ namespace Tanuel\Tokenizer\Test\Mock;
 use Tanuel\Tokenizer\BaseTokenInterface;
 use Tanuel\Tokenizer\TokenStateDefinition;
 
-class TestTokenDefinition extends TokenStateDefinition implements BaseTokenInterface
+class TestTokenStateDefinition extends TokenStateDefinition implements BaseTokenInterface
 {
     /**
      * @pattern test_1
@@ -27,14 +27,14 @@ class TestTokenDefinition extends TokenStateDefinition implements BaseTokenInter
     const T_NO_DOC_COMMENT = '';
 
     /**
-     * @exitState
-     * @pattern ::exitState
-     */
-    const T_EXIT = 'T_EXIT';
-
-    /**
-     * @enterState \Tanuel\Tokenizer\Test\Mock\TestTokenEnterDefinition
+     * @enterState \Tanuel\Tokenizer\Test\Mock\TestTokenSubStateDefinition
      * @pattern ::enterState
      */
     const T_ENTER = 'T_ENTER';
+
+    /**
+     * @exitState
+     * @pattern ::exit(Unused)
+     */
+    const T_EXIT = 'T_ENTER';
 }
